@@ -1,6 +1,6 @@
 const app = new PIXI.Application({
-    width: 480,
-    height: 640,
+    width: 400,
+    height: 300,
     backgroundColor: 0x3b2a20,
     resolution: window.devicePixelRatio || 1,
     autoDensity: true
@@ -12,10 +12,11 @@ const symbols = ['☕', '🫘', '🥐', '🧁', '🐸'];
 
 const reels = [];
 const reelWidth = 120;
-const reelHeight = 120;
+const reelHeight = 80;
 
 const totalWidth = reelWidth * 3;
 const startXGlobal = (app.screen.width - totalWidth) / 2;
+const startYGlobal = 20;
 
 const spinButton = document.getElementById('spin');
 let isSpinning = false;
@@ -28,11 +29,17 @@ for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
         const symbol = new PIXI.Text(
             symbols[Math.floor(Math.random() * symbols.length)],
-            { fontSize: 64 }
+            { fontSize: 50 }
         );
         symbol.anchor.set(0.5);
         symbol.x = reelWidth / 2;
         symbol.y = j * reelHeight + reelHeight / 2;
+        symbol.style = new PIXI.TextStyle({
+            fontSize: 50,
+            fill: '#fff',
+            fontWeight: 'bold',
+            align: 'center'
+        })
         reel.addChild(symbol);
     }
 
@@ -45,12 +52,13 @@ spinButton.addEventListener('click', startSpin);
 //Win text and win-check
 
 const winText = new PIXI.Text('', {
-    fontSize: 32,
-    fill: '#ffffff'
+    fontSize: 24,
+    fill: '#ffd700',
+    fontWeight: 'bold'
 });
 winText.anchor.set(0.5);
 winText.x = app.screen.width / 2;
-winText.y = 520;
+winText.y = app.screen.height - 20;
 app.stage.addChild(winText);
 
 function checkWin() {
@@ -103,7 +111,7 @@ function drawPayline(count, rowIndex) {
     payline.clear();
     payline.lineStyle(4, 0xffffff);
 
-    const y = 180 + rowIndex * reelHeight + reelHeight / 2;
+    const y = startYGlobal + rowIndex * reelHeight + reelHeight / 2;
     const startX = startXGlobal;
     const endX = startXGlobal + reelWidth * count;
 
@@ -136,11 +144,11 @@ function startSpin() {
 
     reels.forEach((reel, i) => {
         gsap.to(reel, {
-            y: reel.y + 360,
+            y: reel.y + 3 * reelHeight,
             duration: 0.8 + i * 0.2,
             ease: 'power3.out',
             onComplete: () => {
-                reel.y = 180;
+                reel.y = startYGlobal;
                 reel.children.forEach(symbol => {
                     symbol.text = symbols[Math.floor(Math.random() * symbols.length)];
                 });
