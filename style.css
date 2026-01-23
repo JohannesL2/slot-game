@@ -12,13 +12,103 @@ body {
     margin-top: 20px;
 }
 
-button {
-    margin-top: 12px;
-    padding: 12px 24px;
+#spin {
+    width: 80px;
+    height: 80px;
     font-size: 18px;
     background: #6f4e37;
     color: #fff;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#spin:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.4);
+}
+
+#spin:active {
+    transform: scale(0.9);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/*Slot dashboard*/
+.slot-dashboard {
+    width: 360px;
+    background: linear-gradient(to bottom, #222, #111);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    text-align: center;
+    margin: 50px auto;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    border: 3px solid #6f4e37;
+}
+
+.slot-info {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+}
+
+.balance {
+    font-weight: bold;
+}
+
+.bet-info span {
+    margin-left: 10px;
+}
+
+.reels {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    cursor: default;
+    user-select: none;
+}
+
+.reel {
+    width: 60px;
+    height: 60px;
+    background: #333;
+    color: #fff;
+    font-size: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 4px 6px rgba(255,255,255,0.2), 0 4px 6px rgba(0,0,0,0.4);
+    transition: transform 0.2s;
+}
+
+.slot-controls {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.control-btn {
+    padding: 8px 12px;
+    background: #444;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.control-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
 }

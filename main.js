@@ -40,33 +40,7 @@ for (let i = 0; i < 3; i++) {
     app.stage.addChild(reel);
 }
 
-spinButton.addEventListener('click', () => {
-    if (isSpinning) return;
-
-    isSpinning = true;
-    spinButton.disabled = true;
-    winText.text = '';
-
-    reels.forEach((reel, i) => {
-        gsap.to(reel, {
-            y: reel.y + 360,
-            duration: 0.8 + i * 0.2,
-            ease: 'power3.out',
-            onComplete: () => {
-                reel.y = 180;
-                reel.children.forEach(symbol => {
-                    symbol.text = symbols[Math.floor(Math.random() * symbols.length)];
-                });
-
-                if (i === reels.length - 1) {
-                    checkWin();
-                    isSpinning = false;
-                    spinButton.disabled = false;
-                }
-            }
-        });
-    });
-});
+spinButton.addEventListener('click', startSpin);
 
 //Win text and win-check
 
@@ -80,9 +54,10 @@ winText.y = 520;
 app.stage.addChild(winText);
 
 function checkWin() {
-    const row = reels.map(reel => reel.children[1].text);
-    const first = row[0];
-    let matchCount = 1;
+    for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
+        const row = reels.map(reel => reel.children[rowIndex].text);
+        const first = row[0];
+        let matchCount = 1;
 
     for (let i = 1; i < row.length; i++) {
         if (row[i] === first || row[i] === '🐸' || first === '🐸') {
@@ -92,34 +67,31 @@ function checkWin() {
         }
     }
 
-
-if (matchCount === 3) {
-        winText.text = 'Good brew ☕';
-
-        reels.forEach(reel => {
-            const symbol = reel.children[1];
-            gsap.fromTo(
-                symbol.scale,
-                { x: 1, y: 1 },
-                { x: 1.3, y: 1.3, yoyo: true, repeat: 1, duration: 0.2 }
-            );
-        });
-    } else if (matchCount === 2) {
-        winText.text = 'Nice! 2 in a row ☕';
-        drawPayline(matchCount);
-
-        for (let i = 0; i < matchCount; i++) {
-            const symbol = reels[i].children[1];
-            gsap.fromTo(
-                symbol.scale,
-                { x: 1, y: 1 },
-                { x: 1.3, y: 1.3, yoyo: true, repeat: 1, duration: 0.2 }
-            );
-        }
-    } else {
-        winText.text = '';
+    if (matchCount >= 2) {
+        showWin(matchCount, rowIndex);
+        return
     }
 }
+    winText.text = "";
+}
+
+function showWin(matchCount, rowIndex) {
+    winText.text =
+        matchCount === 3
+            ? 'Good brew'
+            : 'Nice! 2 in a row';
+
+            drawPayline(matchCount, rowIndex);
+
+            for (let i = 0; i < matchCount; i++) {
+                const symbol = reels[i].children[rowIndex];
+                gsap.fromTo(
+                    symbol.scale,
+                    { x: 1, y: 1 },
+                    { x: 1.3, y: 1.3, yoyo: true, repeat: 1, duration: 0.2 }
+                );
+            }
+        }
 
 
 //Payline graphics
@@ -127,11 +99,11 @@ const payline = new PIXI.Graphics();
 payline.visible = false;
 app.stage.addChild(payline);
 
-function drawPayline(count) {
+function drawPayline(count, rowIndex) {
     payline.clear();
     payline.lineStyle(4, 0xffffff);
 
-    const y = 180 + reelHeight * 1.5;
+    const y = 180 + rowIndex * reelHeight + reelHeight / 2;
     const startX = startXGlobal;
     const endX = startXGlobal + reelWidth * count;
 
@@ -153,4 +125,32 @@ function drawPayline(count) {
             });
         }
     });
+}
+
+function startSpin() {
+    if (isSpinning) return;
+
+    isSpinning = true;
+    spinButton.disabled = true;
+    winText.text = '';
+
+    reels.forEach((reel, i) => {
+        gsap.to(reel, {
+            y: reel.y + 360,
+            duration: 0.8 + i * 0.2,
+            ease: 'power3.out',
+            onComplete: () => {
+                reel.y = 180;
+                reel.children.forEach(symbol => {
+                    symbol.text = symbols[Math.floor(Math.random() * symbols.length)];
+                });
+
+                if (i === reels.length - 1) {
+                    checkWin();
+                    isSpinning = false;
+                    spinButton.disabled = false
+                }
+            }
+        })
+    })
 }
