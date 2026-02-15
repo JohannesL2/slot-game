@@ -158,13 +158,22 @@ function startSpin() {
     isSpinning = true;
     spinButton.disabled = true;
     winText.text = '';
+    payline.visible = false;
 
     reels.forEach((reel, i) => {
+        const blur = reel.filters[0];
+
+        const spinDuration = 0.8 + (i * 0.6);
+
+        gsap.to(blur, { blurY: 10, duration: 0.3 });
+        
         gsap.to(reel, {
-            y: reel.y + 3 * reelHeight,
-            duration: 0.8 + i * 0.2,
-            ease: 'power3.out',
+            y: startYGlobal + 600,
+            duration: spinDuration,
+            ease: 'back.inOut(1.2)',
             onComplete: () => {
+                gsap.to(blur, { blurY: 0, duration: 0.1 });
+                
                 reel.y = startYGlobal;
                 reel.children.forEach(symbol => {
                     symbol.text = symbols[Math.floor(Math.random() * symbols.length)];
