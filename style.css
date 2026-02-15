@@ -1,12 +1,15 @@
 body {
     margin: 0;
+    padding: 10px;
     background: #2b1e16;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    min-height: 100vh;
     color: #fff;
     font-family: system-ui, sans-serif;
+    box-sizing: border-box;
 }
 
 #game-container {
@@ -41,7 +44,8 @@ body {
 
 /*Slot dashboard*/
 .slot-dashboard {
-    width: 360px;
+    width: 100%;
+    max-width: 380px;
     background: linear-gradient(to bottom, #222, #111);
     padding: 20px;
     border-radius: 20px;
@@ -51,6 +55,9 @@ body {
     font-family: 'Arial', sans-serif;
     color: #fff;
     border: 3px solid #6f4e37;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .slot-info {
@@ -115,11 +122,14 @@ body {
 }
 
 #game-container {
-    padding: 10px;
-
+    width: 100%;
+    aspect-ratio: 4 / 3;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #1a100a;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 #game-wrapper {
@@ -127,4 +137,13 @@ body {
     height: auto;
     max-width: 360px;
     display: block;
+}
+
+canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    touch-action: none;
+    image-rendering: -webkit-optimize-contrast;
 }

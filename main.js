@@ -1,20 +1,29 @@
 const app = new PIXI.Application({
-    width: 400,
-    height: 300,
+    view: document.getElementById('game-canvas'),
     backgroundColor: 0x3b2a20,
     resolution: window.devicePixelRatio || 1,
     autoDensity: true
 });
 
+window.addEventListener('resize', resize);
+function resize() {
+    mainContainer.x = app.screen.width / 2;
+    mainContainer.y = app.screen.height / 2;
+}
+
+const mainContainer = new PIXI.Container();
+app.stage.addChild(mainContainer);
+
+
 document.getElementById('game-container').appendChild(app.view);
 
 const symbols = ['☕', '🫘', '🥐', '🧁', '🐸'];
-const reelWidth = 120;
-const reelHeight = 80;
-
+const reelWidth = Math.min(app.screen.width * 0.28, 120);
+const reelHeight = 95;
 const totalWidth = reelWidth * 3;
+
 const startXGlobal = (app.screen.width - totalWidth) / 2;
-const startYGlobal = 20;
+const startYGlobal = 40;
 
 const margin = 10;
 const mask = new PIXI.Graphics();
@@ -46,7 +55,7 @@ for (let i = 0; i < 3; i++) {
             symbols[Math.floor(Math.random()
                 * symbols.length)],
             { 
-                fontSize: 50,
+                fontSize: 75,
                 fill: '#fff',
                 fontWeight: 'bold',
                 dropShadow: true,
