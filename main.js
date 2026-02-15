@@ -18,6 +18,17 @@ const totalWidth = reelWidth * 3;
 const startXGlobal = (app.screen.width - totalWidth) / 2;
 const startYGlobal = 20;
 
+const margin = 10;
+const mask = new PIXI.Graphics();
+mask.beginFill(0xffffff);
+mask.drawRect(startXGlobal, startYGlobal, totalWidth, reelHeight * 3);
+mask.endFill();
+app.stage.addChild(mask);
+
+const reelContainer = new PIXI.Container();
+reelContainer.mask = mask;
+app.stage.addChild(reelContainer);
+
 const spinButton = document.getElementById('spin');
 let isSpinning = false;
 
@@ -44,7 +55,7 @@ for (let i = 0; i < 3; i++) {
     }
 
     reels.push(reel);
-    app.stage.addChild(reel);
+    reelContainer.addChild(reel);
 }
 
 spinButton.addEventListener('click', startSpin);
