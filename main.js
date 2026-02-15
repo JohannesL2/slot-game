@@ -35,22 +35,23 @@ let isSpinning = false;
 for (let i = 0; i < 3; i++) {
     const reel = new PIXI.Container();
     reel.x = startXGlobal + i * reelWidth;
-    reel.y = 180;
+    reel.y = startYGlobal;
 
     for (let j = 0; j < 3; j++) {
         const symbol = new PIXI.Text(
             symbols[Math.floor(Math.random() * symbols.length)],
-            { fontSize: 50 }
+            { 
+                fontSize: 50,
+                fill: '#fff',
+                fontWeight: 'bold',
+                dropShadow: true,
+                dropShadowDistance: 2,
+                dropShadowColor: '#000000'
+            }
         );
         symbol.anchor.set(0.5);
         symbol.x = reelWidth / 2;
         symbol.y = j * reelHeight + reelHeight / 2;
-        symbol.style = new PIXI.TextStyle({
-            fontSize: 50,
-            fill: '#fff',
-            fontWeight: 'bold',
-            align: 'center'
-        })
         reel.addChild(symbol);
     }
 
