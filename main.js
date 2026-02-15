@@ -101,10 +101,11 @@ function checkWin() {
 }
 
 function showWin(matchCount, rowIndex) {
-    winText.text =
-        matchCount === 3
-            ? 'Good brew'
-            : 'Nice! 2 in a row';
+    if (matchCount === 3) {
+        triggerBigWin();
+    } else {
+        winText.text = 'Nice! 2 in a row';
+    }
 
             drawPayline(matchCount, rowIndex);
 
@@ -221,4 +222,76 @@ function createParticles(x, y) {
             }
         })
     }
+}
+
+//Big win
+function triggerBigWin() {
+    const overlay = new PIXI.Graphics();
+    overlay.beginFill(0x000000, 0.7);
+    overlay.drawRect(0, 0, app.screen.width, app.screen.height);
+    overlay.endFill();
+    overlay.alpha = 0;
+    app.stage.addChild(overlay);
+
+    const bigText = new PIXI.Text('BIG WIN', {
+        fontSize: 70,
+        fontWeight: '900',
+        fill: ['#ffffff', '#ffd700', '#ff8c00'],
+        stroke: '#4a3000',
+        strokeThickness: 8,
+        dropShadow: true,
+        dropShadowBlur: 10,
+        dropShadowColor: '#ffcc00',
+        dropShadowDistance: 0,
+    });
+    bigText.anchor.set(0.5);
+    bigText.x = app.screen.width / 2;
+    bigText.y = app.screen.height / 2;
+    bigText.scale.set(0.1);
+    app.stage.addChild(bigText);
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            gsap.to([overlay, bigText], {
+                alpha: 0,
+                delay: 3,
+                duration: 1,
+                onComplete: () => {
+                    app.stage.removeChild(overlay);
+                    app.stage.removeChild(bigText);
+                }
+            });
+        }
+    });
+
+    tl.to(overlay, { alpha: 1, duration: 0.4 })
+        .to(bigText, { alpha: 1, duration: 0.1 }, "-=0.3")
+        .to(bigText.scale, { x: 1.2, y: 1.2, duration: 1, ease: "elastic.out(1, 0.3)" }, "-=0.3")
+        .to(bigText, { rotation: 0.03, yoyo: true, repeat: 20, duration: 0.1 }, "-=0.5");
+
+    const particleInterval = setInterval(() => {
+        if (bigText.alpha > 0) {
+            const startX = Math.random() * app.screen.width;
+            createGoldDrop(startX, -50);
+        } else {
+            clearInterval(particleInterval);
+        }
+    }, 50);
+}
+
+function createGoldDrop(x, y) {
+    const gold = new PIXI.Text('✨', { fontSize: Math.random() * 20 + 20 });
+    gold.x = x;
+    gold.y = y;
+    gold.anchor.set(0.5);
+    app.stage.addChild(gold);
+
+    gsap.to(gold, {
+        y: app.screen.height + 100,
+        x: x + (Math.random() - 0.5) * 100,
+        rotation: 5,
+        duration: 2 + Math.random(),
+        ease: "none",
+        onComplete: () => app.stage.removeChild(gold)
+    });
 }
