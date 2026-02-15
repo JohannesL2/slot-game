@@ -9,8 +9,6 @@ const app = new PIXI.Application({
 document.getElementById('game-container').appendChild(app.view);
 
 const symbols = ['☕', '🫘', '🥐', '🧁', '🐸'];
-
-const reels = [];
 const reelWidth = 120;
 const reelHeight = 80;
 
@@ -32,14 +30,21 @@ app.stage.addChild(reelContainer);
 const spinButton = document.getElementById('spin');
 let isSpinning = false;
 
+const reels = [];
 for (let i = 0; i < 3; i++) {
     const reel = new PIXI.Container();
     reel.x = startXGlobal + i * reelWidth;
     reel.y = startYGlobal;
 
+    const blur = new PIXI.filters.BlurFilter();
+    blur.blurX = 0;
+    blur.blurY = 0;
+    reel.filters = [blur];
+
     for (let j = 0; j < 3; j++) {
         const symbol = new PIXI.Text(
-            symbols[Math.floor(Math.random() * symbols.length)],
+            symbols[Math.floor(Math.random()
+                * symbols.length)],
             { 
                 fontSize: 50,
                 fill: '#fff',
