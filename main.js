@@ -110,10 +110,14 @@ function showWin(matchCount, rowIndex) {
 
             for (let i = 0; i < matchCount; i++) {
                 const symbol = reels[i].children[rowIndex];
+                
+                const globalPos = symbol.getGlobalPosition();
+                createParticles(globalPos.x, globalPos.y);
+
                 gsap.fromTo(
                     symbol.scale,
                     { x: 1, y: 1 },
-                    { x: 1.3, y: 1.3, yoyo: true, repeat: 1, duration: 0.2 }
+                    { x: 1.4, y: 1.4, yoyo: true, repeat: 1, duration: 0.3 }
                 );
             }
         }
@@ -187,4 +191,34 @@ function startSpin() {
             }
         })
     })
+}
+
+function createParticles(x, y) {
+    const container = new PIXI.Container();
+    app.stage.addChild(container);
+
+    const particleCount = 15;
+    for (let i = 0; i < particleCount; i++) {
+        const p = new PIXI.Text('🫘', { fontSize: Math.random() * 20 + 10 });
+        p.x = x;
+        p.y = y;
+        p.anchor.set(0.5);
+        container.addChild(p);
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 100 + 50;
+
+        gsap.to(p, {
+            x: x + Math.cos(angle) * velocity,
+            y: y + Math.sin(angle) * velocity,
+            rotation: Math.random() * 10,
+            alpha: 0,
+            duration: 1 + Math.random(),
+            ease: "power2.out",
+            onComplete: () => {
+                container.removeChild(p);
+                if (container.children.length === 0) app.stage.removeChild(container);
+            }
+        })
+    }
 }
