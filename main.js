@@ -1,31 +1,38 @@
 const app = new PIXI.Application({
     view: document.getElementById('game-canvas'),
     backgroundColor: 0x3b2a20,
+    width: 800,
+    height: 540,
     resolution: window.devicePixelRatio || 1,
     autoDensity: true
 });
 
-window.addEventListener('resize', resize);
-function resize() {
-    mainContainer.x = app.screen.width / 2;
-    mainContainer.y = app.screen.height / 2;
-}
+document.getElementById('game-container').appendChild(app.view);
 
 const mainContainer = new PIXI.Container();
 app.stage.addChild(mainContainer);
 
+const symbols = [
+    'assets/anchor.png',
+    'assets/binocular.png',
+    'assets/chest.png',
+    'assets/lifebuoy.png',
+    'assets/rope.png',
+    'assets/seagull.png',
+    'assets/seastar.png',
+    'assets/shell.png',
+    'assets/steeringwheel.png',
+    'assets/watch.png'
+];
 
-document.getElementById('game-container').appendChild(app.view);
-
-const symbols = ['☕', '🫘', '🥐', '🧁', '🐸'];
-const reelWidth = Math.min(app.screen.width * 0.28, 120);
-const reelHeight = 95;
+const reelWidth = 240;
+const reelHeight = 160;
 const totalWidth = reelWidth * 3;
-
 const startXGlobal = (app.screen.width - totalWidth) / 2;
-const startYGlobal = 40;
+const startYGlobal = 50;
+const reels = [];
+let isSpinning = false;
 
-const margin = 10;
 const mask = new PIXI.Graphics();
 mask.beginFill(0xffffff);
 mask.drawRect(startXGlobal, startYGlobal, totalWidth, reelHeight * 3);
@@ -36,46 +43,53 @@ const reelContainer = new PIXI.Container();
 reelContainer.mask = mask;
 app.stage.addChild(reelContainer);
 
-const spinButton = document.getElementById('spin');
-let isSpinning = false;
+symbols.forEach(img => {
+    PIXI.Assets.add(img, img);
+});
 
-const reels = [];
-for (let i = 0; i < 3; i++) {
-    const reel = new PIXI.Container();
-    reel.x = startXGlobal + i * reelWidth;
-    reel.y = startYGlobal;
+async function loadAndStart() {
+    await PIXI.Assets.load(symbols);
+    setupGame();
+}
+loadAndStart();
 
-    const blur = new PIXI.filters.BlurFilter();
-    blur.blurX = 0;
-    blur.blurY = 0;
-    reel.filters = [blur];
+function setupGame() {
+    for (let i = 0; i < 3; i++) {
+        const reel = new PIXI.Container();
 
-    for (let j = 0; j < 3; j++) {
-        const symbol = new PIXI.Text(
-            symbols[Math.floor(Math.random()
-                * symbols.length)],
-            { 
-                fontSize: 75,
-                fill: '#fff',
-                fontWeight: 'bold',
-                dropShadow: true,
-                dropShadowDistance: 2,
-                dropShadowColor: '#000000'
-            }
-        );
-        symbol.anchor.set(0.5);
-        symbol.x = reelWidth / 2;
-        symbol.y = j * reelHeight + reelHeight / 2;
-        reel.addChild(symbol);
+        reel.x = startXGlobal + (i * reelWidth);
+        reel.y = startYGlobal;
+
+        const blur = new PIXI.filters.BlurFilter();
+        blur.blurX = 0;
+        blur.blurY = 0;
+        reel.filters = [blur];
+
+        for (let j = 0; j < 3; j++) {
+            const symbolName = symbols[Math.floor(Math.random() * symbols.length)];
+
+            const symbol = PIXI.Sprite.from(symbolName);
+
+            symbol.anchor.set(0.5);
+            symbol.x = reelWidth / 2;
+            symbol.y = j * reelHeight + reelHeight / 2;
+
+            const targetHeight = reelHeight * 0.8;
+            const scale = targetHeight / 500;
+
+            symbol.scale.set(scale);
+            symbol.baseScale = scale;
+
+            symbol.symbolName = symbolName;
+            reel.addChild(symbol);
+        }
+        reels.push(reel)
+        reelContainer.addChild(reel);
     }
-
-    reels.push(reel);
-    reelContainer.addChild(reel);
 }
 
+const spinButton = document.getElementById('spin');
 spinButton.addEventListener('click', startSpin);
-
-//Win text and win-check
 
 const winText = new PIXI.Text('', {
     fontSize: 24,
@@ -89,19 +103,20 @@ app.stage.addChild(winText);
 
 function checkWin() {
     for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-        const row = reels.map(reel => reel.children[rowIndex].text);
+        const row = reels.map(reel => reel.children[rowIndex].symbolName);
         const first = row[0];
+        const wild = 'assets/chest.png';
         let matchCount = 1;
 
     for (let i = 1; i < row.length; i++) {
-        if (row[i] === first || row[i] === '🐸' || first === '🐸') {
+        if (row[i] === first || row[i] === wild || first === wild) {
             matchCount++;
         } else {
             break;
         }
     }
 
-    if (matchCount >= 2) {
+    if (matchCount === 3) {
         showWin(matchCount, rowIndex);
         return
     }
@@ -175,7 +190,7 @@ function startSpin() {
     payline.visible = false;
 
     reels.forEach((reel, i) => {
-        const blur = reel.filters[0];
+        const blur = (reel.filters && reel.filters.length > 0) ? reel.filters[0] : null;
 
         const spinDuration = 0.8 + (i * 0.6);
 
@@ -190,7 +205,15 @@ function startSpin() {
                 
                 reel.y = startYGlobal;
                 reel.children.forEach(symbol => {
-                    symbol.text = symbols[Math.floor(Math.random() * symbols.length)];
+                    const newSymbolName = symbols[Math.floor(Math.random() * symbols.length)];
+
+                    symbol.texture = PIXI.Texture.from(newSymbolName);
+
+                    symbol.symbolName = newSymbolName;
+
+                    const s = (reelHeight * 0.8) / 500;
+                    symbol.scale.set(s);
+                    symbol.baseScale = s;
                 });
 
                 if (i === reels.length - 1) {

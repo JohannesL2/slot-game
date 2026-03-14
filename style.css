@@ -13,7 +13,9 @@ body {
 }
 
 #game-container {
-    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 #spin {
@@ -123,7 +125,7 @@ body {
 
 #game-container {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    min-height: 300px; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -134,9 +136,8 @@ body {
 
 #game-wrapper {
     width: 100%;
-    height: auto;
-    max-width: 360px;
-    display: block;
+    max-width: 850px;
+    margin: 0 auto;
 }
 
 canvas {
