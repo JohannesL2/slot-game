@@ -102,50 +102,75 @@ winText.y = app.screen.height - 20;
 app.stage.addChild(winText);
 
 function checkWin() {
+    let winnerFound = false;
+    const wild = 'assets/chest.png';
+
     for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
         const row = reels.map(reel => reel.children[rowIndex].symbolName);
-        const first = row[0];
-        const wild = 'assets/chest.png';
-        let matchCount = 1;
 
-    for (let i = 1; i < row.length; i++) {
-        if (row[i] === first || row[i] === wild || first === wild) {
-            matchCount++;
-        } else {
+        const isNormalMatch = row[0] !== wild && row.every(sym => sym === row[0]);
+
+        const hasChest = row.includes(wild);
+
+        if (isNormalMatch) {
+            showWin(3, rowIndex, true);
+            winnerFound = true;
+            break;
+        }
+        else if (hasChest) {
+            showWin(3, rowIndex, false);
+            winnerFound = true;
             break;
         }
     }
 
-    if (matchCount === 3) {
-        showWin(matchCount, rowIndex);
-        return
+    if (!winnerFound) {
+        winText.text = "";
     }
 }
-    winText.text = "";
-}
 
-function showWin(matchCount, rowIndex) {
-    if (matchCount === 3) {
+
+function showWin(matchCount, rowIndex, shouldDrawLine) {
+    const wild = 'assets/chest.png';
+
+    if (matchCount === 3 && shouldDrawLine) {
         triggerBigWin();
+        winText.text = 'BIG WIN!';
+    } else if (!shouldDrawLine) {
+        winText.text = 'CHEST OBTAINED';
     } else {
-        winText.text = 'Nice! 2 in a row';
+        winText.text = 'LINE WIN!';
     }
 
-            drawPayline(matchCount, rowIndex);
+    if (shouldDrawLine) {
+        drawPayline(matchCount, rowIndex);
+    } else {
+        payline.visible = false;
+    }
 
-            for (let i = 0; i < matchCount; i++) {
+            for (let i = 0; i < 3; i++) {
                 const symbol = reels[i].children[rowIndex];
-                
-                const globalPos = symbol.getGlobalPosition();
-                createParticles(globalPos.x, globalPos.y);
+
+                const isChest = symbol.symbolName === wild;
+
+                if (shouldDrawLine || isChest) {
+                    const globalPos = symbol.getGlobalPosition();
+                    createParticles(globalPos.x, globalPos.y);
 
                 gsap.fromTo(
                     symbol.scale,
-                    { x: 1, y: 1 },
-                    { x: 1.4, y: 1.4, yoyo: true, repeat: 1, duration: 0.3 }
+                    { x: symbol.baseScale, y: symbol.baseScale },
+                    {
+                        x: symbol.baseScale * 1.4, 
+                        y: symbol.baseScale * 1.4, 
+                        yoyo: true, 
+                        repeat: 1, 
+                        duration: 0.3 
+                    }
                 );
             }
         }
+    }
 
 
 //Payline graphics
