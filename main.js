@@ -33,6 +33,43 @@ const startYGlobal = 50;
 const reels = [];
 let isSpinning = false;
 
+//currency
+let balance = 1000;
+let currentbet = 10;
+const betOptions = [10, 20, 50, 100];
+let betIndex = 0;
+
+const balanceElement = document.getElementById('balance-display');
+const betElement = document.getElementById('bet-display');
+const spinButton = document.getElementById('spin');
+const betButton = document.getElementById('change-bet');
+
+function updateUI(isWin) {
+    if (isWin) {
+        let displayVal = { val: parseFloat(balanceElement.innerText.replace('Balance: $', '')) || 0 };
+        gsap.to(displayVal, {
+            val: balance,
+            duration: 1,
+            onUpdate: () => {
+                balanceElement.innerText = `Balance: $${Math.floor(displayVal.val)}`;
+            }
+        });
+    } else {
+        balanceElement.innerText = `Balance: $${Math.floor(balance)}`;
+    }
+    betElement.innerText = `Bet: $${currentbet}`;
+}
+
+if (betButton) {
+    betButton.addEventListener('click', () => {
+        if (isSpinning) return;
+        betIndex = (betIndex + 1) % betOptions.length;
+        currentbet = betOptions[betIndex];
+        updateUI()
+    });
+}
+spinButton.addEventListener('click', startSpin)
+
 const mask = new PIXI.Graphics();
 mask.beginFill(0xffffff);
 mask.drawRect(startXGlobal, startYGlobal, totalWidth, reelHeight * 3);
@@ -88,7 +125,6 @@ function setupGame() {
     }
 }
 
-const spinButton = document.getElementById('spin');
 spinButton.addEventListener('click', startSpin);
 
 const winText = new PIXI.Text('', {
@@ -100,6 +136,24 @@ winText.anchor.set(0.5);
 winText.x = app.screen.width / 2;
 winText.y = app.screen.height - 20;
 app.stage.addChild(winText);
+
+const balanceText = new PIXI.Text(`Balance: $${balance}`, {
+    fontSize: 24,
+    fill: '#ffffff',
+    fontWeight: 'bold'
+});
+balanceText.x = 20;
+balanceText.y = 20;
+app.stage.addChild(balanceText);
+
+const betText = new PIXI.Text(`Bet: $${currentbet}`, {
+    fontSize: 24,
+    fill: '#ffffff',
+    fontWeight: 'bold'
+});
+betText.x = 20;
+betText.y = 55;
+app.stage.addChild(betText);
 
 function checkWin() {
     let winnerFound = false;
@@ -132,15 +186,22 @@ function checkWin() {
 
 function showWin(matchCount, rowIndex, shouldDrawLine) {
     const wild = 'assets/chest.png';
+    let winAmount = 0;
 
     if (matchCount === 3 && shouldDrawLine) {
+        winAmount = currentbet * 10;
         triggerBigWin();
-        winText.text = 'BIG WIN!';
+        winText.text = `BIG WIN: $${winAmount}!`;
     } else if (!shouldDrawLine) {
-        winText.text = 'CHEST OBTAINED';
+        winAmount = currentbet * 2;
+        winText.text = `CHEST REWARD: $${winAmount}`;
     } else {
-        winText.text = 'LINE WIN!';
+        winAmount = currentbet * 5;
+        winText.text = `WIN: $${winAmount}!`;
     }
+
+    balance += winAmount;
+    updateUI();
 
     if (shouldDrawLine) {
         drawPayline(matchCount, rowIndex);
@@ -207,10 +268,17 @@ function drawPayline(count, rowIndex) {
 }
 
 function startSpin() {
-    if (isSpinning) return;
+    if (isSpinning || balance < currentbet) {
+        if (balance < currentbet) alert("Not enough money!");
+        return;
+    }
 
     isSpinning = true;
     spinButton.disabled = true;
+
+    balance -= currentbet;
+    updateUI();
+    
     winText.text = '';
     payline.visible = false;
 
