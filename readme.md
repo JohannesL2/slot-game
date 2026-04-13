@@ -1,33 +1,54 @@
-# ☕ Coffee Break Slots: High-Performance Casino Slots Game
+# Harbor Royale Slots
 
-A sophisticated slot machine prototype developed with **PixiJS** and **GSAP**. This project demonstrates core iGaming development principles including masked rendering, dynamic payline calculation, and high-fidelity motion aesthetics.
+Harbor Royale is a polished browser slot machine built with **PixiJS** and **GSAP**. It takes the original prototype and turns it into a full casino-style mini game with a themed cabinet UI, responsive reel window, weighted symbols, paylines, wilds, scatters, animated win feedback, and ambient harbor touches like floating bubbles.
 
 ![Game Gameplay Preview](./assets/screenshot.png)
 
-## 🕹️ Technical Highlights
+## Highlights
 
-* **Optimized Rendering:** Built on **PixiJS (WebGL)** to ensure 60FPS performance, critical for maintaining player engagement and "game feel."
-* **Procedural Animation:** Utilizes **GSAP (GreenSock)** for physics-based reel behavior. Implements `back.out` easing to simulate mechanical weight and anticipation.
-* **Advanced Game Logic:**
-    * **Wild Symbol Mechanics:** Integrated `🐸` Wild logic that dynamically substitutes symbols to maximize win probability.
-    * **Real-time Payline Calculation:** A robust algorithm that identifies 2-of-a-kind and 3-of-a-kind matches across horizontal vectors.
-    * **Dynamic UI Feedback:** Real-time visual feedback via procedurally drawn paylines and symbol scaling animations.
-* **Asset Masking:** Professional-grade `PIXI.Graphics` masking to manage sprite visibility, ensuring a clean "window" effect within the viewport.
+- Casino-style presentation with a responsive machine cabinet, compact HUD, paytable, and control deck.
+- 3x3 reel setup with up to 5 active paylines.
+- Weighted symbol generation for more slot-like outcomes.
+- Per-symbol payouts for 2-of-a-kind and 3-of-a-kind wins.
+- Treasure Chest wilds and Seastar scatter bonuses.
+- Animated paylines, burst particles, cabinet pulse, and win callouts.
+- In-browser sound effects for spin, reel stops, and win states.
+- Responsive layout work so the reels and controls stay visible together across desktop and smaller screens.
 
-## 🛠️ Industry Tech Stack
+## Tech Stack
 
 | Component | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Engine** | PixiJS | High-performance 2D WebGL rendering |
-| **Animation** | GSAP | Mathematical easing and sequence control |
-| **Language** | ES6+ JavaScript | Modular, maintainable game logic |
-| **Architecture** | Container-Based | Scalable sprite management for easy skinning |
+| Rendering | PixiJS | Reel rendering, cabinet effects, particles |
+| Animation | GSAP | Reel motion, UI feedback, win effects |
+| Language | JavaScript (ES Modules) | Game logic and interaction flow |
+| Styling | CSS | Responsive slot machine layout and visual design |
 
-## 📂 Architecture
+## Game Features
+
+- **Active paylines:** Play from 1 to 5 lines and scale the total bet dynamically.
+- **Coin bet control:** Cycle bet size without leaving the main machine view.
+- **Wild system:** Treasure chests substitute for line symbols and can trigger jackpot-style wins.
+- **Scatter system:** Seastars pay anywhere on the reels.
+- **Win feedback:** Winning lines, symbol pulses, count-up win badge, and celebration overlays make results easier to read.
+- **Harbor theme:** Nautical symbols, premium navy-and-gold cabinet treatment, and soft bubble motion inside the reel window support the Harbor Royale identity.
+
+## Project Structure
 
 ```text
-├── assets/
-│   └── screenshot.png   # Visual documentation
-├── index.html           # DOM Entry point & PIXI Container
-├── main.js            # Core Engine (Logic, Math, Win-Check)
-└── style.css            # Game-center positioning & UI layout
+├── assets/             # Symbol art and screenshot assets
+├── index.html          # App shell and slot machine UI structure
+├── main.js             # Pixi scene, reel logic, payouts, effects, sound
+├── style.css           # Responsive cabinet layout and visual styling
+└── readme.md           # Project documentation
+```
+
+## Running Locally
+
+Because this is a static browser project, you can run it with any simple local server. For example:
+
+```bash
+python3 -m http.server
+```
+
+Then open the local address in your browser and load `index.html`.
