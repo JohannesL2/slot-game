@@ -583,3 +583,121 @@ canvas {
         border-radius: 20px;
     }
 }
+
+@media (max-width: 520px) {
+    body {
+        overflow: auto;
+        padding: 0;
+    }
+
+    .machine-shell {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: auto;
+        padding: 8px;
+        gap: 8px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        overflow: visible;
+    }
+
+    .machine-main {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 8px;
+    }
+
+    .paytable-panel,
+    .feature-panel {
+        display: none;
+    }
+
+    .reel-stage-panel {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .machine-hud-title {
+        font-size: 18px;
+        padding: 9px 12px;
+    }
+
+    .machine-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .stat-card {
+        padding: 8px 8px;
+    }
+
+    .stat-label {
+        font-size: 8px;
+    }
+
+    .stat-value {
+        font-size: 14px;
+    }
+
+    .game-wrapper {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    #game-container {
+        width: 100%;
+        min-height: 240px;
+        max-height: none;
+        aspect-ratio: 900 / 640;
+    }
+
+    .machine-status-overlay {
+        padding: 8px 10px;
+    }
+
+    .status-ribbon {
+        font-size: 9px;
+    }
+
+    .status-display {
+        font-size: 10px;
+        line-height: 1.35;
+    }
+
+    .control-deck {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .control-btn {
+        min-height: 48px;
+        padding: 10px 8px;
+        font-size: 11px;
+    }
+
+    .spin-btn {
+        grid-column: span 2;
+        min-height: 72px;
+    }
+
+    .spin-btn-label {
+        font-size: 20px;
+    }
+
+    .spin-btn-sub {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 520px) and (max-height: 760px) {
+    #game-container {
+        min-height: 210px;
+    }
+
+    .machine-status-overlay {
+        display: none;
+    }
+}
