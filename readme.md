@@ -4,6 +4,10 @@ Harbor Royale is a polished browser slot machine built with **PixiJS** and **GSA
 
 ![Game Gameplay Preview](./assets/screenshot.png)
 
+## Portfolio Note
+
+This project was developed with my own direction and final decision-making, using an LLM coding assistant as a collaborative implementation tool for parts of the UI, gameplay logic, and polish work.
+
 ## Highlights
 
 - Casino-style presentation with a responsive machine cabinet, compact HUD, paytable, and control deck.
