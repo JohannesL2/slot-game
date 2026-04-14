@@ -331,6 +331,10 @@ body {
         rgba(9, 21, 38, 0.88);
 }
 
+.mobile-info-panels {
+    display: none;
+}
+
 .control-btn,
 .spin-btn {
     border: none;
@@ -614,6 +618,26 @@ canvas {
         display: none;
     }
 
+    .mobile-info-panels {
+        display: grid;
+        gap: 8px;
+    }
+
+    .mobile-panel {
+        display: block;
+        padding: 10px;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .mobile-panel .panel-heading {
+        margin-bottom: 10px;
+    }
+
+    .mobile-panel .panel-heading h2 {
+        font-size: 18px;
+    }
+
     .reel-stage-panel {
         padding: 10px;
         gap: 8px;
@@ -669,26 +693,28 @@ canvas {
     .control-deck {
         grid-template-columns: 1fr 1fr;
         gap: 8px;
-        padding: 10px;
+        padding: 8px;
     }
 
     .control-btn {
-        min-height: 48px;
-        padding: 10px 8px;
-        font-size: 11px;
+        min-height: 42px;
+        padding: 8px 6px;
+        border-radius: 14px;
+        font-size: 10px;
+        letter-spacing: 0.05em;
     }
 
     .spin-btn {
         grid-column: span 2;
-        min-height: 72px;
+        min-height: 62px;
     }
 
     .spin-btn-label {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .spin-btn-sub {
-        font-size: 9px;
+        font-size: 8px;
     }
 }
 
@@ -699,5 +725,9 @@ canvas {
 
     .machine-status-overlay {
         display: none;
+    }
+
+    .mobile-panel {
+        padding: 8px;
     }
 }

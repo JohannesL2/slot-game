@@ -138,6 +138,7 @@ const linesElement = document.getElementById("lines-display");
 const totalBetElement = document.getElementById("total-bet-display");
 const statusElement = document.getElementById("status-display");
 const paytableElement = document.getElementById("paytable-list");
+const mobilePaytableElement = document.getElementById("paytable-list-mobile");
 const spinButton = document.getElementById("spin");
 const betButton = document.getElementById("change-bet");
 const increaseLinesButton = document.getElementById("increase-lines");
@@ -362,38 +363,42 @@ function setStatus(message) {
 }
 
 function renderPaytable() {
-    paytableElement.innerHTML = "";
+    [paytableElement, mobilePaytableElement].filter(Boolean).forEach((element) => {
+        element.innerHTML = "";
+    });
 
     symbolCatalog
         .slice()
         .sort((left, right) => right.payouts[3] - left.payouts[3])
         .forEach((symbol) => {
-            const item = document.createElement("article");
-            item.className = "paytable-item";
+            [paytableElement, mobilePaytableElement].filter(Boolean).forEach((element) => {
+                const item = document.createElement("article");
+                item.className = "paytable-item";
 
-            const icon = document.createElement("img");
-            icon.className = "paytable-icon";
-            icon.src = symbol.asset;
-            icon.alt = symbol.name;
+                const icon = document.createElement("img");
+                icon.className = "paytable-icon";
+                icon.src = symbol.asset;
+                icon.alt = symbol.name;
 
-            const meta = document.createElement("div");
+                const meta = document.createElement("div");
 
-            const name = document.createElement("div");
-            name.className = "paytable-name";
-            name.textContent = symbol.name;
+                const name = document.createElement("div");
+                name.className = "paytable-name";
+                name.textContent = symbol.name;
 
-            const values = document.createElement("div");
-            values.className = "paytable-values";
+                const values = document.createElement("div");
+                values.className = "paytable-values";
 
-            if (symbol.id === SCATTER_ID) {
-                values.textContent = `2 anywhere = ${symbol.payouts[2]}x | 3 anywhere = ${symbol.payouts[3]}x`;
-            } else {
-                values.textContent = `2 on a line = ${symbol.payouts[2]}x | 3 on a line = ${symbol.payouts[3]}x`;
-            }
+                if (symbol.id === SCATTER_ID) {
+                    values.textContent = `2 anywhere = ${symbol.payouts[2]}x | 3 anywhere = ${symbol.payouts[3]}x`;
+                } else {
+                    values.textContent = `2 on a line = ${symbol.payouts[2]}x | 3 on a line = ${symbol.payouts[3]}x`;
+                }
 
-            meta.append(name, values);
-            item.append(icon, meta);
-            paytableElement.appendChild(item);
+                meta.append(name, values);
+                item.append(icon, meta);
+                element.appendChild(item);
+            });
         });
 }
 
