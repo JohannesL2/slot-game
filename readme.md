@@ -36,6 +36,10 @@ This project was developed with my own direction and final decision-making, usin
 - **Cherry rule:** Cherries pay when 1, 2, or 3 appear from the left on an active payline.
 - **Win feedback:** Winning lines, symbol pulses, count-up win badge, and celebration overlays.
 
+## Credits
+"Pixel art slot machine", by Vircon32 (Carra). Published at OpenGameArt under license CC-BY 4.0.
+- **Source:** [OpenGameArt](https://opengameart.org/)
+
 ## Project Structure
 
 ```text
