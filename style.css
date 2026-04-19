@@ -101,8 +101,8 @@ body {
     display: inline-flex;
     padding: 6px 10px;
     border-radius: 999px;
-    background: rgba(78, 207, 107, 0.14);
-    color: var(--accent-melon);
+    background: rgba(207, 198, 78, 0.14);
+    color: var(--accent-warm);
     font-size: 11px;
 }
 
