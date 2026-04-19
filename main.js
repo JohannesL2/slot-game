@@ -12,89 +12,78 @@ const CABINET_HEIGHT = 604;
 const REEL_START_X = 75;
 const REEL_START_Y = 96;
 const MAX_LINES = 5;
-const WILD_ID = "chest";
-const SCATTER_ID = "seastar";
+const WILD_ID = "bar";
+const SPRITESHEET_JSON = "assets/spritesheet.json";
+const SPRITESHEET_IMAGE = "assets/spritesheet.png";
+const SPRITESHEET_SIZE = { w: 212, h: 70 };
+
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+PIXI.settings.ROUND_PIXELS = true;
 
 const symbolCatalog = [
     {
-        id: "anchor",
-        asset: "assets/anchor.png",
-        name: "Anchor",
-        payouts: { 2: 2, 3: 6 },
+        id: "orange",
+        frame: "frame_000",
+        name: "Orange",
+        payouts: { 3: 8 },
         weight: 18,
-        tint: 0x90d6ff
+        tint: 0xffa64d
     },
     {
-        id: "rope",
-        asset: "assets/rope.png",
-        name: "Rope",
-        payouts: { 2: 2, 3: 7 },
-        weight: 18,
-        tint: 0xd2b07e
+        id: "pear",
+        frame: "frame_001",
+        name: "Pear",
+        payouts: { 3: 10 },
+        weight: 17,
+        tint: 0xb8e86e
     },
     {
-        id: "lifebuoy",
-        asset: "assets/lifebuoy.png",
-        name: "Lifebuoy",
-        payouts: { 2: 3, 3: 9 },
-        weight: 16,
-        tint: 0xff8c8c
+        id: "watermelon",
+        frame: "frame_002",
+        name: "Watermelon",
+        payouts: { 3: 12 },
+        weight: 15,
+        tint: 0xff4d6d
     },
     {
-        id: "seagull",
-        asset: "assets/seagull.png",
-        name: "Seagull",
-        payouts: { 2: 3, 3: 10 },
-        weight: 14,
-        tint: 0xf7f0c3
-    },
-    {
-        id: "watch",
-        asset: "assets/watch.png",
-        name: "Captain's Watch",
-        payouts: { 2: 4, 3: 14 },
-        weight: 13,
-        tint: 0xffc65e
-    },
-    {
-        id: "binocular",
-        asset: "assets/binocular.png",
-        name: "Binoculars",
-        payouts: { 2: 5, 3: 18 },
-        weight: 12,
-        tint: 0x7fffee
-    },
-    {
-        id: "shell",
-        asset: "assets/shell.png",
-        name: "Pearl Shell",
-        payouts: { 2: 6, 3: 24 },
-        weight: 11,
-        tint: 0xf0c0ff
-    },
-    {
-        id: "steeringwheel",
-        asset: "assets/steeringwheel.png",
-        name: "Helm",
-        payouts: { 2: 8, 3: 32 },
-        weight: 9,
-        tint: 0xffd37c
-    },
-    {
-        id: "chest",
-        asset: "assets/chest.png",
-        name: "Treasure Chest Wild",
-        payouts: { 2: 12, 3: 60 },
+        id: "bar",
+        frame: "frame_003",
+        name: "BAR Wild",
+        payouts: { 3: 60 },
         weight: 7,
-        tint: 0xffd44a
+        tint: 0xffd24a
     },
     {
-        id: "seastar",
-        asset: "assets/seastar.png",
-        name: "Seastar Scatter",
-        payouts: { 2: 5, 3: 20 },
+        id: "coconut",
+        frame: "frame_004",
+        name: "Coconut",
+        payouts: { 3: 16 },
+        weight: 13,
+        tint: 0xe8c4a0
+    },
+    {
+        id: "seven",
+        frame: "frame_005",
+        name: "Lucky Seven",
+        payouts: { 3: 40 },
         weight: 8,
-        tint: 0xff88d1
+        tint: 0xff3b4a
+    },
+    {
+        id: "bell",
+        frame: "frame_006",
+        name: "Bell",
+        payouts: { 3: 20 },
+        weight: 11,
+        tint: 0xffcc4d
+    },
+    {
+        id: "cherry",
+        frame: "frame_007",
+        name: "Cherry",
+        payouts: { 1: 2, 2: 6, 3: 24 },
+        weight: 15,
+        tint: 0xff3355
     }
 ];
 
@@ -102,19 +91,19 @@ const symbolById = Object.fromEntries(symbolCatalog.map((symbol) => [symbol.id, 
 const weightedSymbols = symbolCatalog.flatMap((symbol) => Array.from({ length: symbol.weight }, () => symbol));
 
 const paylines = [
-    { id: 1, rows: [1, 1, 1], color: 0x7cf6ff, name: "Middle Line" },
-    { id: 2, rows: [0, 0, 0], color: 0xffd56d, name: "Top Line" },
-    { id: 3, rows: [2, 2, 2], color: 0xff7b89, name: "Bottom Line" },
-    { id: 4, rows: [0, 1, 2], color: 0x8cff8b, name: "Down Diagonal" },
-    { id: 5, rows: [2, 1, 0], color: 0xd296ff, name: "Up Diagonal" }
+    { id: 1, rows: [1, 1, 1], color: 0xffb347, name: "Middle Line" },
+    { id: 2, rows: [0, 0, 0], color: 0xffd24a, name: "Top Line" },
+    { id: 3, rows: [2, 2, 2], color: 0xff5a6b, name: "Bottom Line" },
+    { id: 4, rows: [0, 1, 2], color: 0x5ecf6b, name: "Down Diagonal" },
+    { id: 5, rows: [2, 1, 0], color: 0xd4a84b, name: "Up Diagonal" }
 ];
 
 const betOptions = [5, 10, 20, 50, 100];
 const machineMessages = {
     idle: "Select your lines and spin for a payout.",
-    spin: "Reels are spinning. Wilds and scatters can stack with line wins.",
+    spin: "Reels are spinning. Classic line wins pay left to right.",
     broke: "Not enough balance for that total bet. Lower your lines or coin size.",
-    jackpot: "Jackpot line. Three treasure chests lit up the machine.",
+    jackpot: "Jackpot line. Three BAR wilds lit up the machine.",
     big: "Big win. Multiple hits landed on the same spin.",
     small: "Win registered. Press spin to chase a bigger combo.",
     lose: "No payout this spin. The next one could still stack multiple wins."
@@ -124,7 +113,7 @@ const app = new PIXI.Application({
     width: DESIGN_WIDTH,
     height: DESIGN_HEIGHT,
     backgroundAlpha: 0,
-    antialias: true,
+    antialias: false,
     resolution: window.devicePixelRatio || 1,
     autoDensity: true
 });
@@ -181,15 +170,11 @@ let lastWin = 0;
 let isSpinning = false;
 let soundEnabled = true;
 let audioContext;
+let symbolTextures = {};
 
-renderPaytable();
 drawMachineChrome();
 updateDashboard();
 setStatus(machineMessages.idle);
-
-symbolCatalog.forEach((symbol) => {
-    PIXI.Assets.add(symbol.asset, symbol.asset);
-});
 
 spinButton.addEventListener("click", startSpin);
 betButton.addEventListener("click", () => {
@@ -219,7 +204,19 @@ resizeObserver.observe(gameContainerElement);
 initialize();
 
 async function initialize() {
-    await PIXI.Assets.load(symbolCatalog.map((symbol) => symbol.asset));
+    const loadedSheet = await PIXI.Assets.load(SPRITESHEET_JSON);
+    symbolTextures = loadedSheet?.textures ?? loadedSheet;
+    if (!symbolTextures || !symbolTextures.frame_000) {
+        throw new Error("Failed to load spritesheet textures from assets/spritesheet.json");
+    }
+
+    Object.values(symbolTextures).forEach((texture) => {
+        if (texture?.baseTexture) {
+            texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+        }
+    });
+
+    renderPaytable();
     setupBubbles();
     setupReels();
     fitGameToContainer();
@@ -240,8 +237,8 @@ function resetBubble(bubble, randomY = false) {
     const radius = 4 + Math.random() * 12;
     bubble.clear();
     bubble.removeChildren();
-    bubble.lineStyle(1.5, 0xb8f7ff, 0.35);
-    bubble.beginFill(0xb8f7ff, 0.08 + Math.random() * 0.08);
+    bubble.lineStyle(1.5, 0xffe4b8, 0.35);
+    bubble.beginFill(0xffe4b8, 0.08 + Math.random() * 0.08);
     bubble.drawCircle(0, 0, radius);
     bubble.endFill();
 
@@ -296,7 +293,8 @@ function setupReels() {
 }
 
 function createSymbolSprite(symbolData, rowIndex) {
-    const sprite = PIXI.Sprite.from(symbolData.asset);
+    const texture = getTextureForSymbol(symbolData);
+    const sprite = new PIXI.Sprite(texture);
     sprite.anchor.set(0.5);
     sprite.x = REEL_WIDTH / 2;
     sprite.y = rowIndex * REEL_HEIGHT + REEL_HEIGHT / 2;
@@ -375,10 +373,9 @@ function renderPaytable() {
                 const item = document.createElement("article");
                 item.className = "paytable-item";
 
-                const icon = document.createElement("img");
+                const icon = document.createElement("div");
                 icon.className = "paytable-icon";
-                icon.src = symbol.asset;
-                icon.alt = symbol.name;
+                applyPaytableFrameStyle(icon, symbol);
 
                 const meta = document.createElement("div");
 
@@ -389,11 +386,12 @@ function renderPaytable() {
                 const values = document.createElement("div");
                 values.className = "paytable-values";
 
-                if (symbol.id === SCATTER_ID) {
-                    values.textContent = `2 anywhere = ${symbol.payouts[2]}x | 3 anywhere = ${symbol.payouts[3]}x`;
-                } else {
-                    values.textContent = `2 on a line = ${symbol.payouts[2]}x | 3 on a line = ${symbol.payouts[3]}x`;
-                }
+                const payoutRows = Object.keys(symbol.payouts)
+                    .map((count) => Number(count))
+                    .sort((a, b) => a - b)
+                    .map((count) => `${count} on line = ${symbol.payouts[count]}x`)
+                    .join(" | ");
+                values.textContent = payoutRows;
 
                 meta.append(name, values);
                 item.append(icon, meta);
@@ -406,27 +404,27 @@ function drawMachineChrome() {
     backgroundLayer.removeChildren();
 
     const outerGlow = new PIXI.Graphics();
-    outerGlow.beginFill(0x09111d, 0.92);
+    outerGlow.beginFill(0x1a0c10, 0.94);
     outerGlow.drawRoundedRect(CABINET_X, CABINET_Y, CABINET_WIDTH, CABINET_HEIGHT, 30);
     outerGlow.endFill();
-    outerGlow.lineStyle(5, 0xf7c55c, 0.8);
+    outerGlow.lineStyle(5, 0xffc84d, 0.85);
     outerGlow.drawRoundedRect(CABINET_X, CABINET_Y, CABINET_WIDTH, CABINET_HEIGHT, 30);
     backgroundLayer.addChild(outerGlow);
     cabinetFrame = outerGlow;
 
     const reelFrame = new PIXI.Graphics();
-    reelFrame.beginFill(0x091526, 0.55);
+    reelFrame.beginFill(0x231018, 0.62);
     reelFrame.drawRoundedRect(REEL_START_X - 8, REEL_START_Y - 8, TOTAL_REEL_WIDTH + 16, REEL_HEIGHT * REEL_ROWS + 16, 26);
     reelFrame.endFill();
-    reelFrame.lineStyle(2, 0x9bc7de, 0.2);
+    reelFrame.lineStyle(2, 0x8b5a42, 0.35);
     reelFrame.drawRoundedRect(REEL_START_X - 8, REEL_START_Y - 8, TOTAL_REEL_WIDTH + 16, REEL_HEIGHT * REEL_ROWS + 16, 26);
     backgroundLayer.addChild(reelFrame);
 
-    const headerText = new PIXI.Text("5 LINES  |  WILD JACKPOT  |  SCATTER BONUS", {
+    const headerText = new PIXI.Text("5 LINES  |  BAR WILD  |  CHERRY PAYS", {
         fontFamily: "Orbitron",
         fontSize: 22,
         fontWeight: "700",
-        fill: 0x78f5ff,
+        fill: 0xffe08a,
         letterSpacing: 2
     });
     headerText.anchor.set(0.5, 0);
@@ -437,7 +435,7 @@ function drawMachineChrome() {
     paylines.forEach((payline, index) => {
         const badge = new PIXI.Container();
         const badgeBg = new PIXI.Graphics();
-        badgeBg.beginFill(0x101b2b, 0.9);
+        badgeBg.beginFill(0x2a181c, 0.92);
         badgeBg.drawRoundedRect(0, 0, 42, 32, 12);
         badgeBg.endFill();
         badgeBg.lineStyle(2, payline.color, 0.9);
@@ -524,7 +522,7 @@ function startSpin() {
 
 function replaceSymbol(sprite) {
     const newSymbol = randomSymbol();
-    sprite.texture = PIXI.Texture.from(newSymbol.asset);
+    sprite.texture = getTextureForSymbol(newSymbol);
     sprite.symbolId = newSymbol.id;
     sprite.symbolData = newSymbol;
     const scale = (REEL_HEIGHT * 0.7) / sprite.texture.height;
@@ -550,8 +548,8 @@ function finalizeSpin() {
             triggerCelebration("JACKPOT", 0xffd44a);
             setStatus(`${machineMessages.jackpot} ${buildResultMessage(results)}`);
             playWinSound("jackpot");
-        } else if (results.lineWins.length > 1 || results.scatterWin > 0) {
-            triggerCelebration("BIG WIN", 0x78f5ff);
+        } else if (results.lineWins.length > 1) {
+            triggerCelebration("BIG WIN", 0xff5a6b);
             setStatus(`${machineMessages.big} ${buildResultMessage(results)}`);
             playWinSound("big");
         } else {
@@ -567,7 +565,7 @@ function finalizeSpin() {
         updateDashboard();
         if (wildCount >= 2) {
             highlightWilds();
-            setStatus("Treasure chests teased a bigger hit. Spin again for the Harbor Royale payoff.");
+            setStatus("BAR wilds teased a bigger hit. Spin again for a fruit-line jackpot.");
         } else {
             setStatus(machineMessages.lose);
         }
@@ -600,29 +598,17 @@ function evaluateSpin() {
         });
     });
 
-    const scatterCount = countScatterSymbols();
-    let scatterWin = 0;
-
-    if (scatterCount >= 2) {
-        const scatterMultiplier = symbolById[SCATTER_ID].payouts[Math.min(scatterCount, 3)];
-        scatterWin = scatterMultiplier * currentBet;
-        totalWin += scatterWin;
-        bestWin = Math.max(bestWin, scatterWin);
-    }
-
     return {
         totalWin,
         bestWin,
-        lineWins,
-        scatterCount,
-        scatterWin
+        lineWins
     };
 }
 
 function evaluateLine(lineSymbols) {
-    const chestCount = lineSymbols.filter((symbol) => symbol.id === WILD_ID).length;
+    const wildCount = lineSymbols.filter((symbol) => symbol.id === WILD_ID).length;
 
-    if (chestCount === lineSymbols.length) {
+    if (wildCount === lineSymbols.length) {
         return {
             symbol: symbolById[WILD_ID],
             count: lineSymbols.length,
@@ -630,7 +616,7 @@ function evaluateLine(lineSymbols) {
         };
     }
 
-    const baseSymbol = lineSymbols.find((symbol) => symbol.id !== WILD_ID && symbol.id !== SCATTER_ID);
+    const baseSymbol = lineSymbols.find((symbol) => symbol.id !== WILD_ID);
 
     if (!baseSymbol) {
         return null;
@@ -646,7 +632,20 @@ function evaluateLine(lineSymbols) {
         break;
     }
 
-    if (count < 2) {
+    if (baseSymbol.id === "cherry") {
+        const cherryMultiplier = baseSymbol.payouts[count];
+        if (!cherryMultiplier) {
+            return null;
+        }
+
+        return {
+            symbol: baseSymbol,
+            count,
+            multiplier: cherryMultiplier
+        };
+    }
+
+    if (count < 3) {
         return null;
     }
 
@@ -655,20 +654,6 @@ function evaluateLine(lineSymbols) {
         count,
         multiplier: baseSymbol.payouts[count]
     };
-}
-
-function countScatterSymbols() {
-    let count = 0;
-
-    reels.forEach((reel) => {
-        reel.children.forEach((sprite) => {
-            if (sprite.symbolId === SCATTER_ID) {
-                count += 1;
-            }
-        });
-    });
-
-    return count;
 }
 
 function countWildSymbols() {
@@ -738,12 +723,12 @@ function updateLineBadges() {
         badge.scale.set(isActive ? 1 : 0.9);
         badgeLabel.text = isActive ? String(payline.id) : "-";
         badgeBg.clear();
-        badgeBg.beginFill(0x101b2b, isActive ? 0.95 : 0.55);
+        badgeBg.beginFill(0x2a181c, isActive ? 0.95 : 0.55);
         badgeBg.drawRoundedRect(0, 0, 42, 32, 12);
         badgeBg.endFill();
         badgeBg.lineStyle(2, payline.color, isActive ? 0.95 : 0.35);
         badgeBg.drawRoundedRect(0, 0, 42, 32, 12);
-        badgeLabel.style.fill = isActive ? payline.color : 0x6c7992;
+        badgeLabel.style.fill = isActive ? payline.color : 0x8b7268;
     });
 }
 
@@ -756,13 +741,55 @@ function buildResultMessage(results) {
         );
     });
 
-    if (results.scatterWin > 0) {
-        parts.push(
-            `${results.scatterCount} Seastars paid ${formatCurrency(results.scatterWin)} anywhere`
-        );
+    return parts.join(" | ");
+}
+
+function applyPaytableFrameStyle(icon, symbol) {
+    const frameTexture = getTextureForSymbol(symbol);
+    if (!frameTexture) {
+        return;
     }
 
-    return parts.join(" | ");
+    const frame = frameTexture.frame;
+    icon.textContent = "";
+
+    const frameViewport = document.createElement("div");
+    frameViewport.className = "paytable-icon-frame";
+
+    const frameImage = document.createElement("img");
+    frameImage.src = SPRITESHEET_IMAGE;
+    frameImage.alt = symbol.name;
+    frameImage.className = "paytable-icon-image";
+
+    const scale = Math.max(1, Math.floor(Math.min(52 / frame.width, 52 / frame.height)));
+    const scaledWidth = SPRITESHEET_SIZE.w * scale;
+    const scaledHeight = SPRITESHEET_SIZE.h * scale;
+    const frameWidth = frame.width * scale;
+    const frameHeight = frame.height * scale;
+
+    frameImage.style.width = `${scaledWidth}px`;
+    frameImage.style.height = `${scaledHeight}px`;
+    frameImage.style.left = `${-frame.x * scale}px`;
+    frameImage.style.top = `${-frame.y * scale}px`;
+
+    frameViewport.style.width = `${frameWidth}px`;
+    frameViewport.style.height = `${frameHeight}px`;
+    frameViewport.appendChild(frameImage);
+    icon.appendChild(frameViewport);
+}
+
+function getTextureForSymbol(symbolData) {
+    const directMatch = symbolTextures?.[symbolData.frame];
+    if (directMatch) {
+        return directMatch;
+    }
+
+    const pngMatch = symbolTextures?.[`${symbolData.frame}.png`];
+    if (pngMatch) {
+        return pngMatch;
+    }
+
+    return PIXI.Texture.WHITE;
 }
 
 function animateWinningSymbols(results) {
@@ -780,16 +807,6 @@ function animateWinningSymbols(results) {
         });
     });
 
-    if (results.scatterWin > 0) {
-        reels.forEach((reel) => {
-            reel.children.forEach((sprite) => {
-                if (sprite.symbolId === SCATTER_ID && !animatedSprites.has(sprite)) {
-                    animatedSprites.add(sprite);
-                    pulseSprite(sprite, symbolById[SCATTER_ID].tint);
-                }
-            });
-        });
-    }
 }
 
 function highlightWilds() {
@@ -854,7 +871,7 @@ function spawnBurst(x, y, color) {
 
 function triggerCelebration(label, color) {
     const overlay = new PIXI.Graphics();
-    overlay.beginFill(0x030710, 0.68);
+    overlay.beginFill(0x120608, 0.72);
     overlay.drawRoundedRect(0, 0, DESIGN_WIDTH, DESIGN_HEIGHT, 0);
     overlay.endFill();
     overlay.alpha = 0;
@@ -909,17 +926,17 @@ function showWinCounter(totalWin, label) {
     overlayLayer.addChild(badge);
 
     const badgeBg = new PIXI.Graphics();
-    badgeBg.beginFill(0x08111f, 0.92);
+    badgeBg.beginFill(0x1a0c10, 0.94);
     badgeBg.drawRoundedRect(-130, -46, 260, 92, 24);
     badgeBg.endFill();
-    badgeBg.lineStyle(3, label === "JACKPOT" ? 0xffd44a : 0x78f5ff, 0.9);
+    badgeBg.lineStyle(3, label === "JACKPOT" ? 0xffd44a : 0xffc84d, 0.9);
     badgeBg.drawRoundedRect(-130, -46, 260, 92, 24);
 
     const title = new PIXI.Text(label, {
         fontFamily: "Orbitron",
         fontSize: 18,
         fontWeight: "800",
-        fill: label === "JACKPOT" ? 0xffd44a : 0x78f5ff,
+        fill: label === "JACKPOT" ? 0xffd44a : 0xffc84d,
         letterSpacing: 2
     });
     title.anchor.set(0.5);
