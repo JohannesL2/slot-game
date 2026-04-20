@@ -362,7 +362,7 @@ body {
 .control-btn {
     min-height: 66px;
     padding: 14px 16px;
-    border-radius: 18px;
+    border-radius: 16px;
     color: var(--cream);
     font-size: 14px;
     text-transform: uppercase;
@@ -715,7 +715,7 @@ canvas {
     .control-btn {
         min-height: 42px;
         padding: 8px 6px;
-        border-radius: 14px;
+        border-radius: 16px;
         font-size: 10px;
         letter-spacing: 0.05em;
     }
