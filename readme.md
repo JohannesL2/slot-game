@@ -1,5 +1,7 @@
 # Fruit Reels Slots
 
+[![CI](https://github.com/JohannesL2/slot-game/actions/workflows/ci.yml/badge.svg)](https://github.com/JohannesL2/slot-game/actions/workflows/ci.yml)
+
 Fruit Reels is a browser slot machine built with **PixiJS** and **GSAP**. It uses a **pixel-art spritesheet** for symbols (orange, pear, watermelon, BAR wild, coconut, seven, bell, cherry), a warm fruit-and-gold cabinet UI, and classic-style **line wins** with cherry pays for 1, 2, or 3 on a line.
 
 ![Game Gameplay Preview](./assets/screenshot.png)

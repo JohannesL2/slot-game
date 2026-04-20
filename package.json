@@ -1,0 +1,15 @@
+{
+  "name": "slot-machine",
+  "version": "1.0.0",
+  "description": "Browser slot machine — unit tests for game logic",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/*.test.js"]
+  }
+}
