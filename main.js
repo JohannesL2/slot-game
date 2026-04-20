@@ -497,27 +497,40 @@ function startSpin() {
     pulseCabinet();
     playSpinSound();
 
-    reels.forEach((reel, column) => {
-        const blur = reel.filters[0];
-        const duration = 0.9 + column * 0.35;
+reels.forEach((reel, column) => {
+    const blur = reel.filters[0];
+    const duration = 0.9 + column * 0.35;
+    
+    gsap.to(blur, { blurY: 10, duration: 0.18, ease: "power1.out" });
 
-        gsap.to(blur, { blurY: 10, duration: 0.18, ease: "power1.out" });
-        gsap.to(reel, {
-            y: REEL_START_Y + 520,
-            duration,
-            ease: "back.in(1.2)",
-            onComplete: () => {
-                reel.y = REEL_START_Y;
-                reel.children.forEach((sprite) => replaceSymbol(sprite));
-                gsap.to(blur, { blurY: 0, duration: 0.15 });
-                playReelStopSound(column);
+    gsap.to(reel, {
+        y: REEL_START_Y + 520,
+        duration: duration,
+        ease: "back.in(1.2)",
+        onComplete: () => {
+            reel.y = REEL_START_Y - 60; 
+            reel.children.forEach((sprite) => replaceSymbol(sprite));
 
-                if (column === REEL_COLUMNS - 1) {
-                    finalizeSpin();
+            gsap.to(reel, {
+                y: REEL_START_Y,
+                duration: 0.6,
+                ease: "back.out(2)",
+                onUpdate: () => {
+                    const distance = Math.abs(reel.y - REEL_START_Y);
+                    blur.blurY = distance * 0.15;
+                },
+                onComplete: () => {
+                    blur.blurY = 0;
+                    playReelStopSound(column);
+
+                    if (column === REEL_COLUMNS - 1) {
+                        finalizeSpin();
+                    }
                 }
-            }
-        });
+            });
+        }
     });
+});
 }
 
 function replaceSymbol(sprite) {
