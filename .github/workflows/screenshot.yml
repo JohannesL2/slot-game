@@ -1,33 +1,34 @@
 name: Update Social Preview
-
 on:
-  deployment_status
+  deployment_status:
 
 jobs:
   screenshot:
     if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'github-pages'
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Take Screenshot
-        uses: swinton/screenshot-action@v1.1.0
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          url: https://johannesl2.github.io/slot-game/
-          output: assets/screenshot.png
-          width: 1280
-          height: 640
-          delay: 5
+          node-version: 20
 
-      - name: Commit and Push screenshot
+      - name: Install Playwright
+        run: |
+          npm install -g playwright
+          npx playwright install chromium --with-deps
+
+      - name: Take Screenshot with Playwright
+        run: |
+          npx playwright screenshot --wait-for-timeout 5000 https://johannesl2.github.io/slot-game/ assets/screenshot.png
+
+      - name: Commit and Push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add social-preview.png
-          git commit -m "chore: update social preview" || true
+          git add assets/screenshot.png
+          git commit -m "chore: automated screenshot update" || true
           git push
