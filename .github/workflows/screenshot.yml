@@ -1,0 +1,33 @@
+name: Update Social Preview
+
+on:
+  deployment_status
+
+jobs:
+  screenshot:
+    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'github-pages'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Take Screenshot
+        uses: swinton/screenshot-action@v1.1.0
+        with:
+          url: https://johannesl2.github.io/slot-game/
+          output: assets/screenshot.png
+          width: 1280
+          height: 640
+          delay: 5
+
+      - name: Commit and Push screenshot
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add social-preview.png
+          git commit -m "chore: update social preview" || true
+          git push
