@@ -200,12 +200,23 @@ body {
 .machine-hud-title {
     padding: 11px 15px;
     border-radius: 16px;
-    background: linear-gradient(180deg, rgba(90, 28, 36, 0.95), rgba(32, 14, 18, 0.96));
-    font-family: "Cinzel", serif;
-    font-size: clamp(18px, 2vw, 26px);
-    color: var(--gold);
-    letter-spacing: 0.05em;
-    white-space: nowrap;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px; 
+    width: fit-content;
+    min-width: 120px;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.hud-logo-img {
+    max-height: 72px;
+    width: auto;
+    object-fit: contain;
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 .machine-stats {
