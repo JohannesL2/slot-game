@@ -3,16 +3,22 @@
   "version": "1.0.0",
   "description": "Browser slot machine — unit tests for game logic",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "build": "tsc",
+    "lint": "echo 'No linting configured yet'" 
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "jest": "^29.0.0"
+    "@types/jest": "^29.5.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
   },
   "jest": {
+    "preset": "ts-jest",
     "testEnvironment": "node",
     "testMatch": [
-      "**/*.test.js"
-    ]
+      "**/src/**/*.test.ts"
+    ],
+    "collectCoverage": true
   }
 }
