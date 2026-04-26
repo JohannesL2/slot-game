@@ -1,3 +1,7 @@
+import { SlotMachineRNG } from "./dist/rng.js";
+
+let currentSpinResult = null;
+
 const REEL_COLUMNS = 3;
 const REEL_ROWS = 3;
 const DESIGN_WIDTH = 900;
@@ -87,8 +91,9 @@ const symbolCatalog = [
     }
 ];
 
+const slotEngine = new SlotMachineRNG(symbolCatalog);
+
 const symbolById = Object.fromEntries(symbolCatalog.map((symbol) => [symbol.id, symbol]));
-const weightedSymbols = symbolCatalog.flatMap((symbol) => Array.from({ length: symbol.weight }, () => symbol));
 
 const paylines = [
     { id: 1, rows: [1, 1, 1], color: 0xffb347, name: "Middle Line" },
@@ -272,6 +277,9 @@ function updateBubbles(delta) {
 }
 
 function setupReels() {
+
+    currentSpinResult = slotEngine.generateSpin();
+
     for (let column = 0; column < REEL_COLUMNS; column += 1) {
         const reel = new PIXI.Container();
         reel.x = REEL_START_X + column * REEL_WIDTH;
@@ -283,7 +291,8 @@ function setupReels() {
         reel.filters = [blur];
 
         for (let row = 0; row < REEL_ROWS; row += 1) {
-            const symbol = createSymbolSprite(randomSymbol(), row);
+            const symbolData = currentSpinResult.grid[column][row];
+            const symbol = createSymbolSprite(symbolData, row);
             reel.addChild(symbol);
         }
 
@@ -307,11 +316,6 @@ function createSymbolSprite(symbolData, rowIndex) {
     sprite.symbolData = symbolData;
 
     return sprite;
-}
-
-function randomSymbol() {
-    const pick = weightedSymbols[Math.floor(Math.random() * weightedSymbols.length)];
-    return pick;
 }
 
 function adjustLines(direction) {
@@ -488,6 +492,9 @@ function startSpin() {
         return;
     }
 
+    currentSpinResult = slotEngine.generateSpin();
+    console.log("Spin result:", currentSpinResult.grid);
+
     isSpinning = true;
     lastWin = 0;
     paylineGraphic.visible = false;
@@ -509,7 +516,7 @@ reels.forEach((reel, column) => {
         ease: "back.in(1.2)",
         onComplete: () => {
             reel.y = REEL_START_Y - 60; 
-            reel.children.forEach((sprite) => replaceSymbol(sprite));
+            reel.children.forEach((sprite, row) => replaceSymbol(sprite, column, row));
 
             gsap.to(reel, {
                 y: REEL_START_Y,
@@ -533,11 +540,15 @@ reels.forEach((reel, column) => {
 });
 }
 
-function replaceSymbol(sprite) {
-    const newSymbol = randomSymbol();
+function replaceSymbol(sprite, colIndex, rowIndex) {
+    const newSymbol = currentSpinResult
+        ? currentSpinResult.grid[colIndex][rowIndex]
+        : symbolCatalog[Math.floor(Math.random() * symbolCatalog.length)];
+
     sprite.texture = getTextureForSymbol(newSymbol);
     sprite.symbolId = newSymbol.id;
     sprite.symbolData = newSymbol;
+
     const scale = (REEL_HEIGHT * 0.7) / sprite.texture.height;
     sprite.scale.set(scale);
     sprite.baseScale = scale;
