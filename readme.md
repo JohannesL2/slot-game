@@ -6,6 +6,7 @@
 Fruit Reels is a browser slot machine built with **TypeScript**, **PixiJS**, and **GSAP**. The project emphasizes robust RNG logic, pixel-art aesthetics, and a fully automated testing environment.
 
 <img width="800" height="420" alt="video" src="https://github.com/user-attachments/assets/a3346b7f-06ba-4266-b657-0b42a2dcb2dd" />
+
 ![Game Gameplay Preview](./assets/screenshot.png)
 
 ## Portfolio Note
