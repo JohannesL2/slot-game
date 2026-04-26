@@ -3,7 +3,7 @@
 [![CI](https://github.com/JohannesL2/slot-game/actions/workflows/ci.yml/badge.svg)](https://github.com/JohannesL2/slot-game/actions/workflows/ci.yml)
 ![License](https://img.shields.io/github/license/JohannesL2/slot-game)
 
-Fruit Reels is a browser slot machine built with **PixiJS** and **GSAP**. It uses a **pixel-art spritesheet** for symbols (orange, pear, watermelon, BAR wild, coconut, seven, bell, cherry), a warm fruit-and-gold cabinet UI, and classic-style **line wins** with cherry pays for 1, 2, or 3 on a line.
+Fruit Reels is a browser slot machine built with **TypeScript**, **PixiJS**, and **GSAP**. The project emphasizes robust RNG logic, pixel-art aesthetics, and a fully automated testing environment.
 
 ![Game Gameplay Preview](./assets/screenshot.png)
 
@@ -13,23 +13,22 @@ This project was developed with my own direction and final decision-making, usin
 
 ## Highlights
 
-- Casino-style presentation with a responsive machine cabinet, compact HUD, paytable, and control deck.
-- 3×3 reel window with up to **5 active paylines**.
-- **Spritesheet-driven symbols** (`assets/spritesheet.json` + `assets/spritesheet.png`) with nearest-neighbor scaling for crisp pixel art.
-- Weighted symbol generation for slot-like outcomes.
-- **Classic line evaluation:** pays left to right; **cherry** pays for 1 / 2 / 3 on a line; other symbols pay on **3 of a kind**; **BAR** substitutes as wild.
-- Animated paylines, burst particles, cabinet pulse, and win callouts.
-- In-browser sound effects for spin, reel stops, and win states.
-- Responsive layout so reels and controls stay usable on desktop and smaller screens.
+## Highlights
+- **TypeScript Architecture:** Type-safe game logic and RNG engine implementation.
+- **Automated Testing:** Comprehensive unit tests for reel generation and payout logic using **Jest**.
+- **Continuous Integration (CI):** GitHub Actions workflow managing automated builds, linting, and testing on every push.
+- **Classic Mechanics:** 3×3 grid with 5 active paylines, weighted symbol generation, and BAR wilds.
+- **Visual Polish:** Spritesheet-driven pixel art, GSAP animations, and a responsive UI.
 
 ## Tech Stack
 
 | Component | Technology | Purpose |
 | :--- | :--- | :--- |
-| Rendering | PixiJS | Reel rendering, spritesheet textures, cabinet effects, particles |
-| Animation | GSAP | Reel motion, UI feedback, win effects |
-| Language | JavaScript (ES Modules) | Game logic and interaction flow |
-| Styling | CSS | Responsive layout and warm fruit-slot visual design |
+| **Language** | **TypeScript** | Type-safe game logic and slot engine |
+| **Testing** | **Jest & ts-jest** | Unit testing for RNG and payout validation |
+| **Rendering** | PixiJS | Reel rendering, spritesheet management, and particles |
+| **Animation** | GSAP | Smooth reel motion, UI feedback, and win effects |
+| **CI/CD** | GitHub Actions | Automated build and test pipeline |
 
 ## Game Features
 
@@ -46,17 +45,32 @@ This project was developed with my own direction and final decision-making, usin
 ## Project Structure
 
 ```text
-├── assets/             # Spritesheet (JSON + PNG), screenshot, etc.
-├── index.html          # App shell and slot machine UI structure
-├── main.js             # Pixi scene, reel logic, payouts, effects, sound
-├── style.css           # Responsive cabinet layout and visual styling
-└── readme.md           # Project documentation
+├── src/                # TypeScript source code
+│   ├── rng.ts          # Core Slot Engine (RNG, grid generation)
+│   └── rng.test.ts     # Unit tests for the engine
+├── dist/               # Compiled JavaScript (Distribution)
+├── assets/             # Spritesheets, audio, and images
+├── index.html          # Main application entry point
+├── package.json        # Dependencies and automation scripts
+└── tsconfig.json       # TypeScript configuration
 ```
 
 ## Running Locally
 
 Because this is a static browser project, you can run it with any simple local server. For example:
 
+Install dependencies:
+```bash
+npm install
+```
+
+Build the project:
+```bash
+npm run build
+```
+
+3. Serve:
+Open `index.html` using a local server (e.g., Live Server in VS Code) or use:
 ```bash
 python3 -m http.server
 ```
